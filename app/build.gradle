@@ -34,6 +34,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     // 카카오 로그인
     implementation 'com.kakao.sdk:usermgmt:1.27.0'
+    implementation "com.kakao.sdk:v2-user:2.4.2"
     // QR 코드 읽기
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     testImplementation 'junit:junit:4.+'
