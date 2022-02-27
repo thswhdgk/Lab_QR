@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.lab_qr">
 
     // 인터넷 권한 허용 -> 카카오 로그인에 사용
@@ -24,8 +25,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="fullSensor"
             android:exported="true" />
+        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation"
+            tools:ignore="MissingClass" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="9d4e091c1f56442413da062bc5b19590" />
