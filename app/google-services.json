@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "268737496881",
+    "project_id": "qrlab-fe3db",
+    "storage_bucket": "qrlab-fe3db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268737496881:android:186475d83c4fd8da455210",
+        "android_client_info": {
+          "package_name": "com.example.lab_qr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268737496881-9hpd6vig8tk19rmd57375oq7q7gq5f0u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lab_qr",
+            "certificate_hash": "a06ba19a0cf2a0224125b48707f11f391203e16a"
+          }
+        },
+        {
+          "client_id": "268737496881-3ie2dn5m7gjut7m9o8l851rcfgi6feqv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzF4IQozycuObOjclpuXuGZTYrHIRqGjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268737496881-3ie2dn5m7gjut7m9o8l851rcfgi6feqv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
