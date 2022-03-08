@@ -2,8 +2,10 @@ package com.example.lab_qr;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,6 +13,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,10 +40,11 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn_scan, btn_store;
+    private Button btn_scan;
     private TextView tv_name,tv_address, tv_result;
     private IntentIntegrator qr_scan;
-    private EditText edt_num, edt_name;
+    private AlertDialog dialog;
+    private EditText et_id, et_name;
     public String name;
     public FirebaseFirestore db;
 
@@ -53,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
         tv_name=findViewById(R.id.tv_name);
         tv_address=findViewById(R.id.tv_address);
         tv_result=findViewById(R.id.tv_result);
-        edt_num=findViewById(R.id.edt_num);
-        edt_name=findViewById(R.id.edt_name);
-        btn_store=findViewById(R.id.btn_store);
-
-        edt_num.setVisibility(View.INVISIBLE);
-        edt_name.setVisibility(View.INVISIBLE);
 
         qr_scan=new IntentIntegrator(this);
 
@@ -68,22 +66,6 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         getInfo();
         Log.e("###",name.toString());
-
-        // 정보 생성하기
-        btn_store.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DocumentReference productRef = db.collection("user").document(name);
-                Map<String, Object> info = new HashMap<>();
-                info.put("name",edt_name.getText().toString());
-                info.put("stu_ID",edt_num.getText().toString());
-                productRef.set(info);
-
-                edt_num.setVisibility(View.INVISIBLE);
-                edt_name.setVisibility(View.INVISIBLE);
-                getInfo();
-            }
-        });
 
         // 스캔 버튼 -> 추후에 수정 예정
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -123,15 +105,36 @@ public class MainActivity extends AppCompatActivity {
                     if(document.exists()) {
                         Log.e("###","데이터 가져오기 성공");
                     } else {
+                        // 학번, 이름 정보 생성하기
                         Log.e("###","해당 문서에 데이터가 없음");
-                        edt_num.setVisibility(View.VISIBLE);
-                        edt_name.setVisibility(View.VISIBLE);
+                        LayoutInflater inflater = getLayoutInflater();
+                        final View v = inflater.inflate(R.layout.info_dialog, null);
+                        showDialog(v);
                     }
                 } else {
                     Log.e("###","데이터 가져오기 실패");
                 }
             }
         });
+    }
+
+    public void showDialog(View view) {
+        et_name = (EditText) view.findViewById(R.id.et_name);
+        et_id = (EditText) view.findViewById(R.id.et_id);
+        AlertDialog.Builder ad = new AlertDialog.Builder(this);
+        ad.setView(view);
+        dialog = ad.create();
+        dialog.show();
+    }
+
+    public void onStoreButtonClicked(View view) {
+        DocumentReference productRef = db.collection("user").document(name);
+        Map<String, Object> info = new HashMap<>();
+        info.put("id",et_id.getText().toString());
+        info.put("name",et_name.getText().toString());
+        productRef.set(info);
+        getInfo();
+        dialog.dismiss();
     }
 
     // 스캔 정보 가져오기
