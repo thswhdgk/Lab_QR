@@ -1,5 +1,6 @@
 package com.example.lab_qr;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,9 +13,16 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.kakao.usermgmt.UserManagement;
@@ -24,12 +32,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn_scan;
+    private Button btn_scan, btn_store;
     private TextView tv_name,tv_address, tv_result;
     private IntentIntegrator qr_scan;
+    private EditText edt_num, edt_name;
+    public String name;
+    public FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +53,37 @@ public class MainActivity extends AppCompatActivity {
         tv_name=findViewById(R.id.tv_name);
         tv_address=findViewById(R.id.tv_address);
         tv_result=findViewById(R.id.tv_result);
+        edt_num=findViewById(R.id.edt_num);
+        edt_name=findViewById(R.id.edt_name);
+        btn_store=findViewById(R.id.btn_store);
+
+        edt_num.setVisibility(View.INVISIBLE);
+        edt_name.setVisibility(View.INVISIBLE);
 
         qr_scan=new IntentIntegrator(this);
+
+        // 로그인 정보 가져오기
+        Intent intent = getIntent();
+        name = intent.getStringExtra("name");
+        db = FirebaseFirestore.getInstance();
+        getInfo();
+        Log.e("###",name.toString());
+
+        // 정보 생성하기
+        btn_store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DocumentReference productRef = db.collection("user").document(name);
+                Map<String, Object> info = new HashMap<>();
+                info.put("name",edt_name.getText().toString());
+                info.put("stu_ID",edt_num.getText().toString());
+                productRef.set(info);
+
+                edt_num.setVisibility(View.INVISIBLE);
+                edt_name.setVisibility(View.INVISIBLE);
+                getInfo();
+            }
+        });
 
         // 스캔 버튼 -> 추후에 수정 예정
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +108,28 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+            }
+        });
+    }
+
+    // 해당 유저 정보 가져오기
+    public void getInfo() {
+        DocumentReference productRef = db.collection("user").document(name);
+        productRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        Log.e("###","데이터 가져오기 성공");
+                    } else {
+                        Log.e("###","해당 문서에 데이터가 없음");
+                        edt_num.setVisibility(View.VISIBLE);
+                        edt_name.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Log.e("###","데이터 가져오기 실패");
+                }
             }
         });
     }

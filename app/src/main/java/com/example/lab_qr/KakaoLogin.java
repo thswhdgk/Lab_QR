@@ -38,8 +38,6 @@ public class KakaoLogin extends AppCompatActivity {
     String token = "";
     String name = "";
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
