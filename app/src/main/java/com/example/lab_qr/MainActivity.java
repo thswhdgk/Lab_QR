@@ -2,16 +2,13 @@ package com.example.lab_qr;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +19,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.kakao.usermgmt.UserManagement;
@@ -34,19 +31,21 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_scan;
-    private TextView tv_name,tv_address, tv_result;
+    private TextView tv_name, tv_id, tv_result, tv_timestamp;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_id, et_name;
     public String name;
     public FirebaseFirestore db;
+    public String user_name, user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         btn_scan=findViewById(R.id.btn_scan);
         tv_name=findViewById(R.id.tv_name);
-        tv_address=findViewById(R.id.tv_address);
+        tv_id=findViewById(R.id.tv_id);
         tv_result=findViewById(R.id.tv_result);
+        tv_timestamp=findViewById(R.id.tv_timestamp);
 
         qr_scan=new IntentIntegrator(this);
 
@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         Log.e("###","데이터 가져오기 성공");
+                        user_name = document.getString("name");
+                        user_id = document.getString("id");
                     } else {
                         // 학번, 이름 정보 생성하기
                         Log.e("###","해당 문서에 데이터가 없음");
@@ -138,26 +140,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 스캔 정보 가져오기
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         IntentResult result=IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result!=null) {
-            // QR 코드 정보 없을 경우
-            if(result.getContents()==null) {
-                Toast.makeText(MainActivity.this,"QR 코드를 읽을 수 없습니다",Toast.LENGTH_SHORT).show();
-            }
             // QR 코드 정보 있을 경우
-            else {
+            String str = "Lab_Permission_QR";
+            if(result.getContents().equals(str)) {
                 Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
-                // QR 정보 데이터를 json으로 변환
+                // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
                 try {
+                    tv_name.setText(user_name);
+                    tv_id.setText(user_id);
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+                    tv_timestamp.setText(timestamp);
                     JSONObject obj=new JSONObject(result.getContents());
-                    tv_name.setText(obj.getString("name"));
-                    tv_address.setText(obj.getString("address"));
                 } catch(JSONException e) {
                     e.printStackTrace();
                     tv_result.setText(result.getContents());
                 }
+            }
+            // QR 코드 정보 없을 경우
+            else {
+                Toast.makeText(MainActivity.this,"QR 코드를 읽을 수 없습니다",Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
