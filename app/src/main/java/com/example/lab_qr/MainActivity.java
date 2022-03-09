@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Build;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
     public String name;
     public FirebaseFirestore db;
     public String user_name, user_id;
+
+
+
+    ///이용자 목록 리사이 클러뷰, 어뎁터, 데이터 불러오기
+
+    private ArrayList<ListData> arrayList;
+    private ListAdapter listAdapter;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +106,33 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+
+
+        //리사이클러뷰 연결
+        recyclerView = (RecyclerView)findViewById(R.id.rv);
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        arrayList = new ArrayList<>();
+
+        listAdapter = new ListAdapter(arrayList);
+        recyclerView.setAdapter(listAdapter);
+
+
+        //리사이클러뷰 확인용 버튼 --> 추후에 데이터 바로 집어넣으면서 삭제할 예정
+        Button btn_add = (Button)findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ListData listData = new ListData("김모공","20201234123" ,"10:15");
+                arrayList.add(listData);
+                listAdapter.notifyDataSetChanged();
+
+            }
+        });
+
+
     }
 
     // 해당 유저 정보 가져오기
