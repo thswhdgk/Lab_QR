@@ -65,21 +65,33 @@ public class MainActivity extends AppCompatActivity {
 
         qr_scan=new IntentIntegrator(this);
 
-        // 로그인 정보 가져오기
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         db = FirebaseFirestore.getInstance();
+
+        // 로그인 정보 가져오기
         getUser();
 
-        // 스캔 버튼 -> 추후에 수정 예정
+        // "User"의 "use" 필드가 false일 경우 스캔 기능, true일 경우 카메라 기능
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 스캔 세로 모드
-                qr_scan.setOrientationLocked(false);
-                qr_scan.setPrompt("스캔중입니다..");
-                // 스캔 실행
-                qr_scan.initiateScan();
+                if(!now_use) {
+                    // 스캔 세로 모드
+                    qr_scan.setOrientationLocked(false);
+                    qr_scan.setPrompt("스캔중입니다..");
+                    // 스캔 실행
+                    qr_scan.initiateScan();
+                } else {
+                    // camera 사용하기
+                    // 1. 버튼 눌렀을 때, 카메라 켜기
+                    // 2. 카메라 촬영했을 때, 파이어베이스 "Info" 컬렉션 - "Timestamp + 이름" 문서를 참조
+                    // 3. 해당 문서의 "finish_time" 필드에 timestamp를 이용하여 카메라촬영시간을 string값으로 추가 (=과랩이용종료시간)
+                    // 4. 해당 문서의 "image_url" 필드에 카메라 사진 url 값을 받아와서 string값으로 추가 및 파이어 스토리지에 사진 url값을 이름으로 설정하여 저장
+                    // 5. 파이어베이스 "User" 컬렉션 - "닉네임" 문서의 "use" 필드값을 false로 변경
+                    // 6. getUser() 함수를 이용하여 해당 유저 정보 갱신하기
+                    // 7. getInfo() 함수를 이용하여 리사이클러뷰 갱신하기
+                }
             }
         });
 
@@ -123,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         user_name = document.getString("name");
                         user_id = document.getString("id");
                         now_use = document.getBoolean("use");
+                        if(!now_use) btn_scan.setText("이용시작");
+                        else btn_scan.setText("이용종료");
                     } else {
                         // 학번, 이름 정보 생성하기
                         Log.e("###","해당 문서에 데이터가 없음");
@@ -137,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 리사이클러뷰에 정보 가져오기
     public void getInfo() {
         db.collection("info")
                 .get()
@@ -159,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 신규 가입자 학번 및 이름 적기
     public void showDialog(View view) {
         et_name = (EditText) view.findViewById(R.id.et_name);
         et_stid = (EditText) view.findViewById(R.id.et_id);
@@ -168,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // 학번, 이름 기입 후 데이터베이스에 저장
     public void onStoreButtonClicked(View view) {
         DocumentReference productRef = db.collection("user").document(name);
         Map<String, Object> user = new HashMap<>();
@@ -215,6 +232,9 @@ public class MainActivity extends AppCompatActivity {
                 user.put("use",true);
                 user.put("documentId",start_time+' '+user_name);
                 productRef.set(user);
+
+                getInfo();
+                getUser();
             }
             // QR 코드 정보 없을 경우
             else {
