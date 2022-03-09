@@ -35,8 +35,6 @@ import java.security.MessageDigest;
 public class KakaoLogin extends AppCompatActivity {
 
     private ISessionCallback mSessionCallback;
-    String token = "";
-    String name = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

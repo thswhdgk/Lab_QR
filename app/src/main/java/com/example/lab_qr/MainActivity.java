@@ -16,15 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.kakao.usermgmt.UserManagement;
@@ -42,24 +42,19 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_scan;
-    private TextView tv_name, tv_id, tv_result, tv_timestamp;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
-    private EditText et_id, et_name;
+    private EditText et_stid, et_name;
     public String name;
     public FirebaseFirestore db;
     public String user_name, user_id;
+    public boolean now_use;
 
-
-
-    ///이용자 목록 리사이 클러뷰, 어뎁터, 데이터 불러오기
-
+    // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
     private ArrayList<ListData> arrayList;
     private ListAdapter listAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btn_scan=findViewById(R.id.btn_scan);
-        tv_name=findViewById(R.id.tv_name);
-        tv_id=findViewById(R.id.tv_id);
-        tv_result=findViewById(R.id.tv_result);
-        tv_timestamp=findViewById(R.id.tv_timestamp);
 
         qr_scan=new IntentIntegrator(this);
 
@@ -78,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         db = FirebaseFirestore.getInstance();
-        getInfo();
-        Log.e("###",name.toString());
+        getUser();
 
         // 스캔 버튼 -> 추후에 수정 예정
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -107,36 +97,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        //리사이클러뷰 연결
-        recyclerView = (RecyclerView)findViewById(R.id.rv);
+        // 리사이클러뷰 연결
+        recyclerView = (RecyclerView)findViewById(R.id.rv_lab);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         arrayList = new ArrayList<>();
-
         listAdapter = new ListAdapter(arrayList);
         recyclerView.setAdapter(listAdapter);
 
-
-        //리사이클러뷰 확인용 버튼 --> 추후에 데이터 바로 집어넣으면서 삭제할 예정
-        Button btn_add = (Button)findViewById(R.id.btn_add);
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ListData listData = new ListData("김모공","20201234123" ,"10:15");
-                arrayList.add(listData);
-                listAdapter.notifyDataSetChanged();
-
-            }
-        });
-
-
+        // 리사이클러뷰에 데이터 가져오기
+        getInfo();
     }
 
     // 해당 유저 정보 가져오기
-    public void getInfo() {
+    public void getUser() {
         DocumentReference productRef = db.collection("user").document(name);
         productRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -147,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("###","데이터 가져오기 성공");
                         user_name = document.getString("name");
                         user_id = document.getString("id");
+                        now_use = document.getBoolean("use");
                     } else {
                         // 학번, 이름 정보 생성하기
                         Log.e("###","해당 문서에 데이터가 없음");
@@ -161,9 +137,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getInfo() {
+        db.collection("info")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        // 데이터 가져오기 성공
+                        if(task.isSuccessful()) {
+                            arrayList.clear();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Log.e("###",doc.getData().toString());
+                                ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString());
+                                arrayList.add(listData);
+                            }
+                            listAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.e("###","error");
+                        }
+                }
+        });
+    }
+
     public void showDialog(View view) {
         et_name = (EditText) view.findViewById(R.id.et_name);
-        et_id = (EditText) view.findViewById(R.id.et_id);
+        et_stid = (EditText) view.findViewById(R.id.et_id);
         AlertDialog.Builder ad = new AlertDialog.Builder(this);
         ad.setView(view);
         dialog = ad.create();
@@ -172,11 +170,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void onStoreButtonClicked(View view) {
         DocumentReference productRef = db.collection("user").document(name);
-        Map<String, Object> info = new HashMap<>();
-        info.put("id",et_id.getText().toString());
-        info.put("name",et_name.getText().toString());
-        productRef.set(info);
-        getInfo();
+        Map<String, Object> user = new HashMap<>();
+        user.put("id",et_stid.getText().toString());
+        user.put("name",et_name.getText().toString());
+        user.put("use",false);
+        user.put("documentId",null);
+        productRef.set(user);
+        getUser();
         dialog.dismiss();
     }
 
@@ -192,16 +192,29 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
                 // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
                 try {
-                    tv_name.setText(user_name);
-                    tv_id.setText(user_id);
-                    LocalDateTime dateTime = LocalDateTime.now();
-                    String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
-                    tv_timestamp.setText(timestamp);
                     JSONObject obj=new JSONObject(result.getContents());
                 } catch(JSONException e) {
                     e.printStackTrace();
-                    tv_result.setText(result.getContents());
                 }
+                // 과랩 출입 정보 기록
+                LocalDateTime dateTime = LocalDateTime.now();
+                String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+                DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
+                Map<String, Object> info = new HashMap<>();
+                info.put("name",user_name);
+                info.put("id",user_id);
+                info.put("start_time",start_time);
+                info.put("finish_time","사용 중");
+                info.put("image_url",null);
+                DocRef.set(info);
+
+                DocumentReference productRef = db.collection("user").document(name);
+                Map<String, Object> user = new HashMap<>();
+                user.put("id",user_id);
+                user.put("name",user_name);
+                user.put("use",true);
+                user.put("documentId",start_time+' '+user_name);
+                productRef.set(user);
             }
             // QR 코드 정보 없을 경우
             else {
