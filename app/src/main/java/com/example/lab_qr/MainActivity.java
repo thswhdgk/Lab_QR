@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Build;
@@ -56,14 +57,26 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_scan=findViewById(R.id.btn_scan);
+        btn_scan = findViewById(R.id.btn_scan);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
-        qr_scan=new IntentIntegrator(this);
+        // 새로고침
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getInfo();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        qr_scan = new IntentIntegrator(this);
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
@@ -110,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 리사이클러뷰 연결
-        recyclerView = (RecyclerView)findViewById(R.id.rv_lab);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
