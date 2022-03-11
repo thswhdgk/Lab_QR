@@ -5,6 +5,10 @@
 
     // 인터넷 권한 허용 -> 카카오 로그인에 사용
     <uses-permission android:name="android.permission.INTERNET" />
+    // 카메라 권한 허용
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,6 +37,16 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="9d4e091c1f56442413da062bc5b19590" />
+
+        <provider
+            android:authorities="com.example.lab_qr"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

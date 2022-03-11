@@ -5,13 +5,24 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +31,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.kakao.usermgmt.UserManagement;
@@ -34,21 +50,31 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.grpc.Context;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_IMAGE_CAPTURE = 672;
+    private String imageFilePath, imageFileName;
+    private Uri photoUri;
     private Button btn_scan;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
+    private StorageReference storageRef;
     public String name;
     public FirebaseFirestore db;
-    public String user_name, user_id;
+    public String user_name, user_id, document_id;
     public boolean now_use;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
@@ -81,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
         // 로그인 정보 가져오기
         getUser();
@@ -96,14 +124,8 @@ public class MainActivity extends AppCompatActivity {
                     // 스캔 실행
                     qr_scan.initiateScan();
                 } else {
-                    // camera 사용하기
-                    // 1. 버튼 눌렀을 때, 카메라 켜기
-                    // 2. 카메라 촬영했을 때, 파이어베이스 "Info" 컬렉션 - "Timestamp + 이름" 문서를 참조
-                    // 3. 해당 문서의 "finish_time" 필드에 timestamp를 이용하여 카메라촬영시간을 string값으로 추가 (=과랩이용종료시간)
-                    // 4. 해당 문서의 "image_url" 필드에 카메라 사진 url 값을 받아와서 string값으로 추가 및 파이어 스토리지에 사진 url값을 이름으로 설정하여 저장
-                    // 5. 파이어베이스 "User" 컬렉션 - "닉네임" 문서의 "use" 필드값을 false로 변경
-                    // 6. getUser() 함수를 이용하여 해당 유저 정보 갱신하기
-                    // 7. getInfo() 함수를 이용하여 리사이클러뷰 갱신하기
+                    // 카메라 권한 확인
+                    checkPermission();
                 }
             }
         });
@@ -135,6 +157,63 @@ public class MainActivity extends AppCompatActivity {
         getInfo();
     }
 
+    // 카메라 권한 확인
+    public void checkPermission() {
+        int cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if(cameraPermission == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},99);
+        }
+    }
+
+    // 카메라 권한 수락하기
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 99) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                Toast.makeText(this,"수락하지 않으면 앱이 종료됩니다",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    // 카메라 실행하기
+    public void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+
+            }
+            if(photoFile != null) {
+                photoUri = FileProvider.getUriForFile(this,getPackageName(),photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+                startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    // 이미지 파일 생성
+    private File createImageFile() throws IOException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmSS").format(new Date());
+        imageFileName = "lab_"+timestamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        Log.e("###",imageFileName);
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
     // 해당 유저 정보 가져오기
     public void getUser() {
         DocumentReference productRef = db.collection("user").document(name);
@@ -148,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                         user_name = document.getString("name");
                         user_id = document.getString("id");
                         now_use = document.getBoolean("use");
+                        document_id = document.getString("documentId");
                         if(!now_use) btn_scan.setText("이용시작");
                         else btn_scan.setText("이용종료");
                     } else {
@@ -210,51 +290,92 @@ public class MainActivity extends AppCompatActivity {
         dialog.dismiss();
     }
 
-    // 스캔 정보 가져오기
+    // 카메라 촬영 후 확인 버튼 눌렀을 때 & 스캔 정보 가져오기
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult result=IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result!=null) {
-            // QR 코드 정보 있을 경우
-            String str = "Lab_Permission_QR";
-            if(result.getContents().equals(str)) {
-                Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
-                // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
-                try {
-                    JSONObject obj=new JSONObject(result.getContents());
-                } catch(JSONException e) {
-                    e.printStackTrace();
+        super.onActivityResult(requestCode, resultCode, data);
+        // 카메라 촬영 후 확인 버튼 눌렀을 때 데이터베이스 갱신 및 스토리지에 추가
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.e("###","카메라 확인 버튼 눌렀음");
+            // 스토리지에 추가
+            StorageReference riversRef = storageRef.child("lab_image/"+imageFileName);
+            UploadTask uploadTask = riversRef.putFile(photoUri);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("###","스토리지 업로드 실패");
                 }
-                // 과랩 출입 정보 기록
-                LocalDateTime dateTime = LocalDateTime.now();
-                String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
-                DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
-                Map<String, Object> info = new HashMap<>();
-                info.put("name",user_name);
-                info.put("id",user_id);
-                info.put("start_time",start_time);
-                info.put("finish_time","사용 중");
-                info.put("image_url",null);
-                DocRef.set(info);
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e("###","스토리지 업로드 완료");
+                }
+            });
 
-                DocumentReference productRef = db.collection("user").document(name);
-                Map<String, Object> user = new HashMap<>();
-                user.put("id",user_id);
-                user.put("name",user_name);
-                user.put("use",true);
-                user.put("documentId",start_time+' '+user_name);
-                productRef.set(user);
+            // 데이터베이스 갱신
+            LocalDateTime dateTime = LocalDateTime.now();
+            String finish_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+            DocumentReference DocRef = db.collection("info").document(document_id);
+            Map<String, Object> info = new HashMap<>();
+            info.put("finish_time",finish_time);
+            info.put("image_url","lab_image/"+imageFileName);
+            DocRef.update(info);
 
-                getInfo();
-                getUser();
+            DocumentReference productRef = db.collection("user").document(name);
+            Map<String, Object> user = new HashMap<>();
+            user.put("use",false);
+            user.put("documentId",null);
+            productRef.update(user);
+
+            getInfo();
+            getUser();
+        }
+        // 스캔 정보 가져오기
+        else {
+            IntentResult result=IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if(result!=null) {
+                // QR 코드 정보 있을 경우
+                String str = "Lab_Permission_QR";
+                if(result.getContents().equals(str)) {
+                    Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
+                    // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
+                    try {
+                        JSONObject obj=new JSONObject(result.getContents());
+                    } catch(JSONException e) {
+                        e.printStackTrace();
+                    }
+                    // 과랩 출입 정보 기록
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+                    DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
+                    Map<String, Object> info = new HashMap<>();
+                    info.put("name",user_name);
+                    info.put("id",user_id);
+                    info.put("start_time",start_time);
+                    info.put("finish_time","사용 중");
+                    info.put("image_url",null);
+                    DocRef.set(info);
+
+                    DocumentReference productRef = db.collection("user").document(name);
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("id",user_id);
+                    user.put("name",user_name);
+                    user.put("use",true);
+                    user.put("documentId",start_time+' '+user_name);
+                    productRef.set(user);
+
+                    getInfo();
+                    getUser();
+                }
+                // QR 코드 정보 없을 경우
+                else {
+                    Toast.makeText(MainActivity.this,"QR 코드를 읽을 수 없습니다",Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
             }
-            // QR 코드 정보 없을 경우
-            else {
-                Toast.makeText(MainActivity.this,"QR 코드를 읽을 수 없습니다",Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
