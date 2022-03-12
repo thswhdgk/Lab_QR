@@ -68,6 +68,7 @@ public class KakaoLogin extends AppCompatActivity {
                         intent.putExtra("name",result.getKakaoAccount().getProfile().getNickname());
                         intent.putExtra("profileImg",result.getKakaoAccount().getProfile().getProfileImageUrl());
                         startActivity(intent);
+                        finish();
                     }
                 });
             }

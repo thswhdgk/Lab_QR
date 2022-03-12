@@ -22,8 +22,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +67,7 @@ import io.grpc.Context;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 672;
+    private long clickTime = 0;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
     private Button btn_scan;
@@ -155,6 +158,21 @@ public class MainActivity extends AppCompatActivity {
 
         // 리사이클러뷰에 데이터 가져오기
         getInfo();
+    }
+
+    // 뒤로가기 버튼 2번 누를 시에 앱 종료
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(SystemClock.elapsedRealtime() - clickTime < 2000) {
+                finish();
+                overridePendingTransition(0,0);
+                return true;
+            }
+            clickTime = SystemClock.elapsedRealtime();
+            Toast.makeText(getApplication(),"한번 더 클릭하시면 앱을 종료합니다",Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     // 카메라 권한 확인
