@@ -3,6 +3,7 @@ package com.example.lab_qr;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,36 +40,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
         holder.itemView.getTag(position);
 
         // 짧게 눌렀을 때 확인용 토스트메시지 -> 추후에 사진에 팝업되게 수정할 예정
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "짧게 누르기", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // 오래 눌렸을 때 리스트에 삭제하는 코드, 확인용으로 추후에 없앨 예정
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                removelist(holder.getAdapterPosition());
-                Toast.makeText(view.getContext(), "오래 누르기", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(view.getContext(), "짧게 누르기", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
     public int getItemCount() {
         return (null != arrayList ? arrayList.size() : 0);
-    }
-
-    public void removelist(int position){
-        try{
-            arrayList.remove(position);
-            notifyItemRemoved(position);
-        } catch (IndexOutOfBoundsException exception){
-            exception.printStackTrace();
-        }
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -83,6 +65,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
             this.tv_stid = (TextView) itemView.findViewById(R.id.tv_stid);
             this.tv_start_time = (TextView) itemView.findViewById(R.id.tv_start_time);
             this.tv_finish_time = (TextView) itemView.findViewById(R.id.tv_finish_time);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION) {
+                        if(mListener != null) {
+                            mListener.onItemClick(v,pos);
+                        }
+                    }
+                }
+            });
         }
+    }
+
+    private OnItemClickListener mListener = null;
+
+    public void setOnItemClickListener(OnItemClickListener listener) { this.mListener = listener; }
+
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
 }

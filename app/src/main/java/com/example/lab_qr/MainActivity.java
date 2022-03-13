@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 672;
     private long clickTime = 0;
+    private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
     private Button btn_scan;
@@ -158,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
 
         // 리사이클러뷰에 데이터 가져오기
         getInfo();
+
+        // 해당 위치 데이터 리스트 접근
+        listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                getList = arrayList.get(position);
+                Log.e("###",getList.getImage_url());
+            }
+        });
     }
 
     // 뒤로가기 버튼 2번 누를 시에 앱 종료
@@ -274,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                             arrayList.clear();
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 Log.e("###",doc.getData().toString());
-                                ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString());
+                                ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString(), doc.get("image_url").toString());
                                 arrayList.add(listData);
                             }
                             listAdapter.notifyDataSetChanged();
