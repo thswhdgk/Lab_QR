@@ -3,24 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.lab_qr">
 
-    // 인터넷 권한 허용 -> 카카오 로그인에 사용
     <uses-permission android:name="android.permission.INTERNET" />
-    // 카메라 권한 허용
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
+        android:name=".CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
-        android:name=".CustomApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LAB_QR">
+        android:theme="@style/Theme.LAB_QR"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".KakaoLogin"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,19 +29,21 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation"
-            tools:ignore="MissingClass" />
+            tools:ignore="MissingClass"
+            tools:replace="screenOrientation" />
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="9d4e091c1f56442413da062bc5b19590" />
 
         <provider
-            android:authorities="com.example.lab_qr"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.lab_qr"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

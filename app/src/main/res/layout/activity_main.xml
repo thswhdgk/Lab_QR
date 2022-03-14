@@ -27,6 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="10"
             tools:ignore="MissingConstraints" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <Button
