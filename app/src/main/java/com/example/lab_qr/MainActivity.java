@@ -143,19 +143,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 로그아웃 버튼 -> 추후에 수정 예정
-        findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        // 로그아웃 성공시 수행
-                        finish();
-                    }
-                });
-            }
-        });
+
 
         // 리사이클러뷰 연결
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -473,7 +461,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.logout:
-                Toast.makeText(getApplicationContext(),"로그아웃클릭",Toast.LENGTH_SHORT).show();
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Intent intent = new Intent(getApplicationContext(), KakaoLogin.class);
+                        startActivity(intent);
+                        // 로그아웃 성공시 수행
+                        finish();
+                    }
+                });
                 return true;
             case  R.id.profile_modify:
                 Toast.makeText(getApplicationContext(),"화면수정",Toast.LENGTH_SHORT).show();
