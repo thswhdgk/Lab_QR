@@ -3,8 +3,10 @@ package com.example.lab_qr;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -25,6 +27,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -32,7 +36,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public FirebaseFirestore db;
     public String user_name, user_id, document_id;
     public boolean now_use;
+    private long backKeyPressedTime = 0 ;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
     private ArrayList<ListData> arrayList;
@@ -88,10 +92,15 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initView(); //toolbar보이게 하기
+        onBackPressed();
 
         btn_scan = findViewById(R.id.btn_scan);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
 
         qr_scan = new IntentIntegrator(this);
 
@@ -193,6 +203,28 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplication(),"한번 더 클릭하시면 앱을 종료합니다",Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.e("###","눌려라시발");
+        //super.onBackPressed();
+        // 기존 뒤로 가기 버튼의 기능을 막기 위해 주석 처리 또는 삭제
+
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지났으면 Toast 출력
+        // 2500 milliseconds = 2.5 seconds
+        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
+            finish();
+            Toast.makeText(this,"이용해 주셔서 감사합니다.",Toast.LENGTH_LONG).show();
+        }
     }
 
     // 카메라 권한 확인
@@ -415,5 +447,43 @@ public class MainActivity extends AppCompatActivity {
                 super.onActivityResult(requestCode, resultCode, data);
             }
         }
+    }
+
+    //toolbar 관련
+
+    //toolbar 보이게 하는거
+    private void initView() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true); //뒤로가기 버튼
+
+    }
+
+    //점점점 눌렀을 때 하위 메뉴 보이게 하는거
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+
+    //하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout:
+                Toast.makeText(getApplicationContext(),"로그아웃클릭",Toast.LENGTH_SHORT).show();
+                return true;
+            case  R.id.profile_modify:
+                Toast.makeText(getApplicationContext(),"화면수정",Toast.LENGTH_SHORT).show();
+                return true;
+            case android.R.id.home:
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                this.finish();
+                return true;
+        }
+        return false;
     }
 }
