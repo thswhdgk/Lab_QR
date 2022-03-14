@@ -18,6 +18,9 @@
         android:theme="@style/Theme.LAB_QR"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".KakaoLogin"
             android:exported="true">
             <intent-filter>

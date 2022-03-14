@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
+
         db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -444,7 +445,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true); //뒤로가기 버튼
 
     }
 
@@ -460,26 +460,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.logout:
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        Intent intent = new Intent(getApplicationContext(), KakaoLogin.class);
-                        startActivity(intent);
-                        // 로그아웃 성공시 수행
-                        finish();
-                    }
-                });
-                return true;
-            case  R.id.profile_modify:
-                Toast.makeText(getApplicationContext(),"화면수정",Toast.LENGTH_SHORT).show();
-                return true;
-            case android.R.id.home:
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            case R.id.logout:
+//                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+//                    @Override
+//                    public void onCompleteLogout() {
+//                        Intent intent = new Intent(getApplicationContext(), KakaoLogin.class);
+//                        startActivity(intent);
+//                        // 로그아웃 성공시 수행
+//                        finish();
+//                    }
+//                });
+//                return true;
+            case  R.id.item_account:
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("name",name);
                 startActivity(intent);
-                this.finish();
                 return true;
         }
         return false;
     }
+
 }

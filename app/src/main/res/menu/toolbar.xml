@@ -3,16 +3,10 @@
 
 
             <item
-                android:id="@+id/logout"
-                android:title="로그아웃"
-
-                android:tooltipText="로그아웃"
-                app:showAsAction="withText"
+                android:id="@+id/item_account"
+                android:title="계정관리"
+                android:tooltipText="계정관리"
+                app:showAsAction="collapseActionView"
                 />
-            <item
-                android:id="@+id/profile_modify"
-                android:title="회원정보 수정"
-                android:tooltipText="회원정보 수정"
-                app:showAsAction="withText"/>
 
 </menu>
