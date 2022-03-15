@@ -82,9 +82,11 @@ public class ProfileActivity extends AppCompatActivity {
                 UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                     @Override
                     public void onCompleteLogout() {
-                        Intent intent = new Intent(getApplicationContext(), KakaoLogin.class);
+                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                        intent.putExtra("name", name);
+                        intent.putExtra("state","off");
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        // 로그아웃 성공시 수행
                         finish();
                     }
                 });

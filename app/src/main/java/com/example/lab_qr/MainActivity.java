@@ -114,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
+        if(intent.getExtras() != null && intent.getExtras().getString("state").equals("off")){
+            Log.e("###","현재 state - off 정보 있음");
+            final Intent new_intent = new Intent(MainActivity.this, KakaoLogin.class);
+            startActivity(new_intent);
+            finish();
+        }
 
         db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();

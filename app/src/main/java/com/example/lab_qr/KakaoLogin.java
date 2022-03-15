@@ -8,11 +8,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kakao.auth.ISessionCallback;
@@ -35,6 +38,7 @@ import java.security.MessageDigest;
 public class KakaoLogin extends AppCompatActivity {
 
     private ISessionCallback mSessionCallback;
+    private long clickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,6 @@ public class KakaoLogin extends AppCompatActivity {
         setContentView(R.layout.activity_kakao_login);
 
         getAppKeyHash();
-
         mSessionCallback = new ISessionCallback() {
             @Override
             public void onSessionOpened() {
@@ -57,7 +60,7 @@ public class KakaoLogin extends AppCompatActivity {
                     @Override
                     public void onSessionClosed(ErrorResult errorResult) {
                         // 로그인 세션이 닫힘
-                        Toast.makeText(KakaoLogin.this, "세션이 닫혔습니다.. 다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(KakaoLogin.this, "세션이 닫혔습니다.. 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -67,6 +70,7 @@ public class KakaoLogin extends AppCompatActivity {
                         Intent intent=new Intent(KakaoLogin.this,MainActivity.class);
                         intent.putExtra("name",result.getKakaoAccount().getProfile().getNickname());
                         intent.putExtra("profileImg",result.getKakaoAccount().getProfile().getProfileImageUrl());
+                        intent.putExtra("state","on");
                         startActivity(intent);
                         finish();
                     }
@@ -96,6 +100,21 @@ public class KakaoLogin extends AppCompatActivity {
         } catch(Exception e) {
             Log.e("name not found",e.toString());
         }
+    }
+
+    // 뒤로가기 버튼 2번 누를 시에 앱 종료
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(SystemClock.elapsedRealtime() - clickTime < 2000) {
+                finish();
+                overridePendingTransition(0,0);
+                return true;
+            }
+            clickTime = SystemClock.elapsedRealtime();
+            Toast.makeText(getApplication(),"한번 더 클릭하시면 앱을 종료합니다",Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     // 로그아웃해서 돌아왔을 때 로그인 정보 전달
