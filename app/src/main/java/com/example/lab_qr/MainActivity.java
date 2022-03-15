@@ -69,7 +69,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 672;
-    private long clickTime = 0;
+    private long clickTime = 0, recyclerClickTime = 0;
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
+                if(SystemClock.elapsedRealtime() - recyclerClickTime < 1000) return;
+                recyclerClickTime = SystemClock.elapsedRealtime();
                 getList = arrayList.get(position);
                 Log.e("###",getList.getImage_url());
                 storageRef.child(getList.getImage_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
