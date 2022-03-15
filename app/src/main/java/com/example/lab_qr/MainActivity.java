@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                 // 스캔 중 뒤로 가기 눌렀을 경우
                 if(result.getContents() == null) { }
                 // QR 코드 정보 있을 경우
-                else if(result.getContents().equals(str)) {
+                if(result.getContents().equals(str)) {
                     Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
                     // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
                     try {
@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     info.put("id",user_id);
                     info.put("start_time",start_time);
                     info.put("finish_time","사용 중");
-                    info.put("image_url",null);
+                    info.put("image_url","");
                     DocRef.set(info);
 
                     DocumentReference productRef = db.collection("user").document(name);
