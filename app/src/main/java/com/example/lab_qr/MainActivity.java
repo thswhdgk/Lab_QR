@@ -372,9 +372,11 @@ public class MainActivity extends AppCompatActivity {
         else {
             IntentResult result=IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if(result!=null) {
-                // QR 코드 정보 있을 경우
                 String str = "Lab_Permission_QR";
-                if(result.getContents().equals(str)) {
+                // 스캔 중 뒤로 가기 눌렀을 경우
+                if(result.getContents() == null) { }
+                // QR 코드 정보 있을 경우
+                else if(result.getContents().equals(str)) {
                     Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
                     // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
                     try {
