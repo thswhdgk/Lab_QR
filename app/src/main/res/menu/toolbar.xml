@@ -1,12 +1,10 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-            <item
-                android:id="@+id/item_account"
-                android:title="계정관리"
-                android:tooltipText="계정관리"
-                app:showAsAction="collapseActionView"
-                />
-
+    <item
+        android:id="@+id/item_account"
+        android:title="계정관리"
+        android:tooltipText="계정관리"
+        app:showAsAction="collapseActionView"
+        />
 </menu>

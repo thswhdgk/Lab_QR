@@ -36,12 +36,11 @@ import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
-
     public FirebaseFirestore db;
     public String name;
     private TextView tv_profile_name;
     private TextView tv_profile_id;
-    private ImageView imv_profile;
+    private ImageView iv_profile;
     private Button btn_modify;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -61,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         storageRef = storage.getReference();
         tv_profile_id = (TextView)findViewById(R.id.tv_profile_stid);
         tv_profile_name = (TextView) findViewById(R.id.tv_profilename);
-        imv_profile = (ImageView)findViewById(R.id.imv_profile);
+        iv_profile = (ImageView)findViewById(R.id.iv_profile);
         btn_modify = (Button)findViewById(R.id.btn_profile_modify);
         btn_logout = (Button) findViewById(R.id.btn_logout);
 
@@ -91,7 +90,6 @@ public class ProfileActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     // 해당 유저 정보 가져오기
@@ -107,13 +105,6 @@ public class ProfileActivity extends AppCompatActivity {
                         user_id = document.getString("id");
                         tv_profile_id.setText(user_id);
                         tv_profile_name.setText(user_name);
-                    } else {
-                        // 학번, 이름 정보 생성하기
-                        Log.e("###","해당 문서에 데이터가 없음");
-                        Toast.makeText(getApplicationContext(),"회원정보가 없습니다. 회원정보를 수정해주세요", Toast.LENGTH_SHORT).show();
-//                        LayoutInflater inflater = getLayoutInflater();
-//                        final View v = inflater.inflate(R.layout.info_dialog, null);
-//                        showDialog(v);
                     }
                 } else {
                     Log.e("###","데이터 가져오기 실패");
@@ -122,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    // 신규 가입자 학번 및 이름 적기
+    // 회원정보 수정
     public void showDialog(View view) {
         et_name = (EditText) view.findViewById(R.id.et_name);
         et_stid = (EditText) view.findViewById(R.id.et_id);
@@ -151,35 +142,12 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true); //뒤로가기버튼 생성
-
     }
-
-    //점점점 눌렀을 때 하위 메뉴 보이게 하는거
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true;
-    }
-
 
     //하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-//            case R.id.logout:
-//                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-//                    @Override
-//                    public void onCompleteLogout() {
-//                        //intent에 정보 더 넣어서 여기서 나간거면 mainactivity도 finish하게 나중에 수정예정
-//                        Intent intent = new Intent(getApplicationContext(), KakaoLogin.class);
-//                        startActivity(intent);
-//                        // 로그아웃 성공시 수행
-//                        finish();
-//                    }
-//                });
-//                return true;
-            case  R.id.item_account:
-                return true;
             case android.R.id.home:
                 finish(); //현재 액티비티 없애서 뒤로가기
                 return true;
