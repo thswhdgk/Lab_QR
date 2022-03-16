@@ -162,21 +162,26 @@ public class MainActivity extends AppCompatActivity {
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                if(SystemClock.elapsedRealtime() - recyclerClickTime < 1000) return;
-                recyclerClickTime = SystemClock.elapsedRealtime();
                 getList = arrayList.get(position);
                 Log.e("###",getList.getImage_url());
-                storageRef.child(getList.getImage_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.e("###",String.valueOf(uri));
-                        CustomDialog.getInstance(MainActivity.this).showDialog(uri);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
+                if(getList.getImage_url() == "") {
+                    Toast.makeText(getApplication(),"사용 중입니다",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if (SystemClock.elapsedRealtime() - recyclerClickTime < 1000) return;
+                    recyclerClickTime = SystemClock.elapsedRealtime();
+                    storageRef.child(getList.getImage_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.e("###", String.valueOf(uri));
+                            CustomDialog.getInstance(MainActivity.this).showDialog(uri);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+                }
             }
         });
     }
