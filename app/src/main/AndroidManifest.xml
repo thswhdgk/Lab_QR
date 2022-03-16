@@ -18,6 +18,9 @@
         android:theme="@style/Theme.LAB_QR"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PopulationPickerDialog"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity

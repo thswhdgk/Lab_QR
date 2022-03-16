@@ -34,18 +34,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.tv_name.setText(arrayList.get(position).getName());
         holder.tv_stid.setText(arrayList.get(position).getStid());
+        holder.tv_population.setText(arrayList.get(position).getPopulation());
         holder.tv_start_time.setText(arrayList.get(position).getStart_time());
         holder.tv_finish_time.setText(arrayList.get(position).getFinish_time());
 
         holder.itemView.getTag(position);
-
-        // 짧게 눌렀을 때 확인용 토스트메시지 -> 추후에 사진에 팝업되게 수정할 예정
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(view.getContext(), "짧게 누르기", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override
@@ -56,6 +49,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView tv_name;
         protected TextView tv_stid;
+        protected TextView tv_population;
         protected TextView tv_start_time;
         protected TextView tv_finish_time;
 
@@ -63,6 +57,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
             super(itemView);
             this.tv_name = (TextView) itemView.findViewById(R.id.tv_name);
             this.tv_stid = (TextView) itemView.findViewById(R.id.tv_stid);
+            this.tv_population = (TextView) itemView.findViewById(R.id.tv_population);
             this.tv_start_time = (TextView) itemView.findViewById(R.id.tv_start_time);
             this.tv_finish_time = (TextView) itemView.findViewById(R.id.tv_finish_time);
 

@@ -34,6 +34,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                             arrayList.clear();
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 Log.e("###",doc.getData().toString());
-                                ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString(), doc.get("image_url").toString());
+                                ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("population").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString(), doc.get("image_url").toString());
                                 arrayList.add(listData);
                             }
                             listAdapter.notifyDataSetChanged();
@@ -351,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("###","스토리지 업로드 완료");
                 }
             });
-
             // 데이터베이스 갱신
             LocalDateTime dateTime = LocalDateTime.now();
             String finish_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
@@ -386,28 +386,53 @@ public class MainActivity extends AppCompatActivity {
                     } catch(JSONException e) {
                         e.printStackTrace();
                     }
-                    // 과랩 출입 정보 기록
-                    LocalDateTime dateTime = LocalDateTime.now();
-                    String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
-                    DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
-                    Map<String, Object> info = new HashMap<>();
-                    info.put("name",user_name);
-                    info.put("id",user_id);
-                    info.put("start_time",start_time);
-                    info.put("finish_time","사용 중");
-                    info.put("image_url","");
-                    DocRef.set(info);
+                    // 과랩 출입 인원수 체크
+                    PopulationPickerDialog populationPickerDialog = PopulationPickerDialog.getInstance(MainActivity.this);
+                    populationPickerDialog.setContentView(R.layout.activity_population_picker_dialog);
 
-                    DocumentReference productRef = db.collection("user").document(name);
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("id",user_id);
-                    user.put("name",user_name);
-                    user.put("use",true);
-                    user.put("documentId",start_time+' '+user_name);
-                    productRef.set(user);
+                    int minvalue = 1, maxvalue = 30, step = 1;
+                    String[] arrayValue = getArrayWithSteps(minvalue,maxvalue,step);
 
-                    getInfo();
-                    getUser();
+                    NumberPicker population_picker = populationPickerDialog.findViewById(R.id.population_picker);
+                    Button btn_save = populationPickerDialog.findViewById(R.id.btn_save);
+
+                    population_picker.setMinValue(minvalue);
+                    population_picker.setMaxValue(maxvalue);
+                    population_picker.setDisplayedValues(arrayValue);
+                    population_picker.setValue(3);
+                    population_picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+                    btn_save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String population = String.valueOf(population_picker.getValue());
+                            // 과랩 출입 정보 기록
+                            LocalDateTime dateTime = LocalDateTime.now();
+                            String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+                            DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
+                            Map<String, Object> info = new HashMap<>();
+                            info.put("name",user_name);
+                            info.put("id",user_id);
+                            info.put("population",population+"명");
+                            info.put("start_time",start_time);
+                            info.put("finish_time","사용 중");
+                            info.put("image_url","");
+                            DocRef.set(info);
+
+                            DocumentReference productRef = db.collection("user").document(name);
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("id",user_id);
+                            user.put("name",user_name);
+                            user.put("use",true);
+                            user.put("documentId",start_time+' '+user_name);
+                            productRef.set(user);
+
+                            getInfo();
+                            getUser();
+                            populationPickerDialog.dismiss();
+                        }
+                    });
+                    populationPickerDialog.show();
                 }
                 // QR 코드 정보 없을 경우
                 else {
@@ -419,7 +444,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //toolbar 선언
+    // NumberPicker 설정
+    public String[] getArrayWithSteps(int minvalue, int maxvalue, int step) {
+        int number_of_array = (maxvalue - minvalue) / step + 1;
+        String[] result = new String[number_of_array];
+        for(int i=0; i<number_of_array; i++) {
+            result[i] = String.valueOf(minvalue+step*i);
+        }
+        return result;
+    }
+
+    // toolbar 선언
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -433,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
+    // 하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
