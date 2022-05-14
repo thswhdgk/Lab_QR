@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference storageRef;
     public String name;
     public FirebaseFirestore db;
-    public String user_name, user_id, document_id;
+    public String year_month, user_name, user_id, document_id;
     public boolean now_use;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
@@ -173,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
                     storageRef.child(getList.getImage_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Log.e("###", String.valueOf(uri));
                             CustomDialog.getInstance(MainActivity.this).showDialog(uri);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -271,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
                         user_name = document.getString("name");
                         user_id = document.getString("id");
                         now_use = document.getBoolean("use");
+                        year_month = document.getString("year_month");
+                        if(year_month == null) year_month = " ";
                         document_id = document.getString("documentId");
                         if(!now_use) btn_scan.setText("이용시작");
                         else btn_scan.setText("이용종료");
@@ -290,7 +292,11 @@ public class MainActivity extends AppCompatActivity {
 
     // 리사이클러뷰에 정보 가져오기
     public void getInfo() {
-        db.collection("info")
+        Long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM");
+        String now_time = mFormat.format(date);
+        db.collection(now_time)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -298,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                         // 데이터 가져오기 성공
                         if(task.isSuccessful()) {
                             arrayList.clear();
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                            for (QueryDocumentSnapshot doc  : task.getResult()) {
                                 Log.e("###",doc.getData().toString());
                                 ListData listData = new ListData(doc.get("name").toString(), doc.get("id").toString(), doc.get("population").toString(), doc.get("start_time").toString(), doc.get("finish_time").toString(), doc.get("image_url").toString());
                                 arrayList.add(listData);
@@ -328,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
         user.put("id",et_stid.getText().toString());
         user.put("name",et_name.getText().toString());
         user.put("use",false);
+        user.put("year_month",null);
         user.put("documentId",null);
         productRef.set(user);
         getUser();
@@ -360,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
             // 데이터베이스 갱신
             LocalDateTime dateTime = LocalDateTime.now();
             String finish_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
-            DocumentReference DocRef = db.collection("info").document(document_id);
+            DocumentReference DocRef = db.collection(year_month).document(document_id);
             Map<String, Object> info = new HashMap<>();
             info.put("finish_time",finish_time);
             info.put("image_url","lab_image/"+imageFileName);
@@ -369,6 +376,7 @@ public class MainActivity extends AppCompatActivity {
             DocumentReference productRef = db.collection("user").document(name);
             Map<String, Object> user = new HashMap<>();
             user.put("use",false);
+            user.put("year_month",null);
             user.put("documentId",null);
             productRef.update(user);
 
@@ -414,7 +422,8 @@ public class MainActivity extends AppCompatActivity {
                             // 과랩 출입 정보 기록
                             LocalDateTime dateTime = LocalDateTime.now();
                             String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
-                            DocumentReference DocRef = db.collection("info").document(start_time+' '+user_name);
+                            year_month =  DateTimeFormatter.ofPattern("yyyy-MM").format(dateTime);
+                            DocumentReference DocRef = db.collection(year_month).document(start_time+' '+user_name);
                             Map<String, Object> info = new HashMap<>();
                             info.put("name",user_name);
                             info.put("id",user_id);
@@ -426,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
                             DocumentReference productRef = db.collection("user").document(name);
                             Map<String, Object> user = new HashMap<>();
+                            user.put("year_month", year_month);
                             user.put("id",user_id);
                             user.put("name",user_name);
                             user.put("use",true);
