@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -31,16 +32,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -64,8 +70,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -82,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference storageRef;
     public String name;
     public FirebaseFirestore db;
-    public String year_month, user_name, user_id, document_id;
+    public String year_month, user_name, user_id, document_id, now_year, now_month;
+    public List<String> yearList;
     public boolean now_use;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
@@ -103,11 +112,99 @@ public class MainActivity extends AppCompatActivity {
         btn_scan = findViewById(R.id.btn_scan);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
+        // 현재 시간 정보 가져오기
+        Spinner year_spinner = findViewById(R.id.year_spinner);
+        Long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyy");
+        SimpleDateFormat mFormat2 = new SimpleDateFormat("MM");
+        now_year = mFormat1.format(date);
+        now_month = mFormat2.format(date);
+
+        // 년도 선택 스피너
+        yearList = new ArrayList<String>();
+        for(int i=2022; i<=Integer.parseInt(now_year); i++) {
+            yearList.add(Integer.toString(i));
+        }
+        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,yearList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        year_spinner.setAdapter(adapter);
+        year_spinner.setSelection(yearList.size()-1);
+        // 년도 선택 이벤트
+        year_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                now_year = yearList.get(position);
+                getInfo(now_year+"-"+now_month);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        // 월 선택 탭아이템
+        TabLayout tab;
+        tab = findViewById(R.id.tab);
+        tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
+        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition()==0) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==1) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==2) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==3) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==4) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==5) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==6) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==7) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==8) {
+                    now_month = "0"+String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==9) {
+                    now_month = String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==10) {
+                    now_month = String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                } else if (tab.getPosition()==11) {
+                    now_month = String.valueOf(tab.getPosition()+1);
+                    getInfo(now_year+"-"+now_month);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         // 새로고침
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getInfo();
+                // 이 부분 고치기
+                getInfo(now_year+"-"+now_month);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -157,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(listAdapter);
 
         // 리사이클러뷰에 데이터 가져오기
-        getInfo();
+        getInfo(now_year+"-"+now_month);
 
         // 해당 위치 데이터 리스트 접근
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
@@ -291,11 +388,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 리사이클러뷰에 정보 가져오기
-    public void getInfo() {
-        Long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM");
-        String now_time = mFormat.format(date);
+    public void getInfo(String now_time) {
+        Log.e("###",now_time);
         db.collection(now_time)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -372,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
             info.put("finish_time",finish_time);
             info.put("image_url","lab_image/"+imageFileName);
             DocRef.update(info);
+            String tmp_year_month = year_month;
 
             DocumentReference productRef = db.collection("user").document(name);
             Map<String, Object> user = new HashMap<>();
@@ -380,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
             user.put("documentId",null);
             productRef.update(user);
 
-            getInfo();
+            getInfo(tmp_year_month);
             getUser();
         }
         // 스캔 정보 가져오기
@@ -442,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
                             user.put("documentId",start_time+' '+user_name);
                             productRef.set(user);
 
-                            getInfo();
+                            getInfo(year_month);
                             getUser();
                             populationPickerDialog.dismiss();
                         }
