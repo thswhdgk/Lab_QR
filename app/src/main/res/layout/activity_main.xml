@@ -44,7 +44,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:layout_marginRight="10sp"
-            android:text="현재" />
+            android:text="전지윤 돼지쉨ㅋ" />
 
     </LinearLayout>
 
