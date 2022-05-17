@@ -109,21 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
-  //      btn_toProfile = findViewById(R.id.btn_toProfile);
         btn_scan = findViewById(R.id.btn_scan);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-
-
-//        // 옆에 버튼 누르면 계정관리 페이지로 넘어가기
-//        btn_toProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                intent.putExtra("name",name);
-//                startActivity(intent);
-//            }
-//        });
-
 
         // 현재 시간 정보 가져오기
         Spinner year_spinner = findViewById(R.id.year_spinner);
@@ -200,15 +187,11 @@ public class MainActivity extends AppCompatActivity {
                     getInfo(now_year+"-"+now_month);
                 }
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
@@ -216,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // 이 부분 고치기
                 getInfo(now_year+"-"+now_month);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -497,10 +479,13 @@ public class MainActivity extends AppCompatActivity {
             if(result!=null) {
                 String str = "Lab_Permission_QR";
                 // 스캔 중 뒤로 가기 눌렀을 경우
-                if(result.getContents() == null) { }
+                if(result.getContents() == null) {
+                    Log.e("###","스캔 중 뒤로가기");
+                    return;
+                }
                 // QR 코드 정보 있을 경우
                 if(result.getContents().equals(str)) {
-                    Toast.makeText(MainActivity.this,"QR 코드를 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"QR 코드 정보를 가져왔습니다",Toast.LENGTH_SHORT).show();
                     // QR 정보 데이터를 json으로 변환 및 사용자 정보 가져옴
                     try {
                         JSONObject obj=new JSONObject(result.getContents());
