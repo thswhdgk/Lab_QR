@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
-    private Button btn_scan, btn_toProfile;
+    private Button btn_scan, btn_now;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
     public String year_month, user_name, user_id, document_id, now_year, now_month;
     public List<String> yearList;
     public boolean now_use;
+    public TabLayout tab;
+    public Spinner year_spinner;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
     private ArrayList<ListData> arrayList;
@@ -110,20 +112,16 @@ public class MainActivity extends AppCompatActivity {
         initView();
 
         btn_scan = findViewById(R.id.btn_scan);
+        btn_now = findViewById(R.id.btn_now);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        year_spinner = findViewById(R.id.year_spinner);
+        tab = findViewById(R.id.tab);
 
-        // 현재 시간 정보 가져오기
-        Spinner year_spinner = findViewById(R.id.year_spinner);
-        Long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyy");
-        SimpleDateFormat mFormat2 = new SimpleDateFormat("MM");
-        now_year = mFormat1.format(date);
-        now_month = mFormat2.format(date);
+        getCurrentTime();
 
         // 년도 선택 스피너
         yearList = new ArrayList<String>();
-        for(int i=2022; i<=Integer.parseInt(now_year); i++) {
+        for(int i=2000; i<=Integer.parseInt(now_year); i++) {
             yearList.add(Integer.toString(i));
         }
         ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,yearList);
@@ -143,8 +141,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 월 선택 탭아이템
-        TabLayout tab;
-        tab = findViewById(R.id.tab);
         tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -209,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         if(intent.getExtras() != null && intent.getExtras().getString("state").equals("off")){
-            Log.e("###","현재 state - off 정보 있음");
             final Intent new_intent = new Intent(MainActivity.this, KakaoLogin.class);
             startActivity(new_intent);
             finish();
@@ -219,8 +214,20 @@ public class MainActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        // 로그인 정보 가져오기
+        // 초기 정보 가져오기
         getUser();
+        getInfo(now_year+"-"+now_month);
+
+        // 현재 버튼 클릭 시 현재 년도, 월로 돌아가기
+        btn_now.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentTime();
+                tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
+                year_spinner.setSelection(yearList.size()-1);
+                getInfo(now_year+"-"+now_month);
+            }
+        });
 
         // "User"의 "use" 필드가 false일 경우 스캔 기능, true일 경우 카메라 기능
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -248,9 +255,6 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new ListAdapter(arrayList);
         recyclerView.setAdapter(listAdapter);
 
-        // 리사이클러뷰에 데이터 가져오기
-        getInfo(now_year+"-"+now_month);
-
         // 해당 위치 데이터 리스트 접근
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
@@ -276,6 +280,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // 현재 시간 정보 가져오기
+    private void getCurrentTime() {
+        Long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyy");
+        SimpleDateFormat mFormat2 = new SimpleDateFormat("MM");
+        now_year = mFormat1.format(date);
+        now_month = mFormat2.format(date);
     }
 
     // 뒤로가기 버튼 2번 누를 시에 앱 종료

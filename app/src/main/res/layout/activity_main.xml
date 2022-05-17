@@ -13,12 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_toProfile"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="임시" />-->
-
     <LinearLayout
         android:id="@+id/spinner_layout"
         android:layout_width="match_parent"
@@ -31,11 +25,26 @@
 
         <Spinner
             android:id="@+id/year_spinner"
+            android:layout_marginLeft="10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:spinnerMode="dropdown" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_marginRight="10sp"
+            android:text="현재" />
 
     </LinearLayout>
 
