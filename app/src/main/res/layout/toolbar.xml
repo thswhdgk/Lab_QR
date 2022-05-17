@@ -3,7 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
      android:id="@+id/toolbar"
-    android:background="@color/design_default_color_primary_dark"
+    android:background="@color/white"
    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:text="LAB_QR"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        />
+
 
 </androidx.appcompat.widget.Toolbar>

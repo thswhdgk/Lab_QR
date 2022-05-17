@@ -31,17 +31,19 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
     public FirebaseFirestore db;
     public String name;
-    private TextView tv_profile_name;
-    private TextView tv_profile_id;
-    private ImageView iv_profile;
-    private Button btn_modify;
+    private TextView tv_name;
+    private TextView tv_stid;
+    private TextView tv_modify, tv_logout;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
     private StorageReference storageRef;
@@ -58,16 +60,15 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        tv_profile_id = (TextView)findViewById(R.id.tv_profile_stid);
-        tv_profile_name = (TextView) findViewById(R.id.tv_profilename);
-        iv_profile = (ImageView)findViewById(R.id.iv_profile);
-        btn_modify = (Button)findViewById(R.id.btn_profile_modify);
-        btn_logout = (Button) findViewById(R.id.btn_logout);
+        tv_stid = (TextView)findViewById(R.id.tv_stid);
+        tv_name = (TextView) findViewById(R.id.tv_name);
+        tv_modify = (TextView)findViewById(R.id.tv_modify);
+        tv_logout = (TextView) findViewById(R.id.tv_logout);
 
         initView();
         getUser();
 
-        btn_modify.setOnClickListener(new View.OnClickListener() {
+        tv_modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -76,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        btn_logout.setOnClickListener(new View.OnClickListener() {
+        tv_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
@@ -105,8 +106,8 @@ public class ProfileActivity extends AppCompatActivity {
                     if(document.exists()) {
                         user_name = document.getString("name");
                         user_id = document.getString("id");
-                        tv_profile_id.setText(user_id);
-                        tv_profile_name.setText(user_name);
+                        tv_stid.setText(user_id);
+                        tv_name.setText(user_name);
                     }
                 } else {
                     Log.e("###","데이터 가져오기 실패");
@@ -142,8 +143,8 @@ public class ProfileActivity extends AppCompatActivity {
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true); //뒤로가기버튼 생성
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     //하위 메뉴들 눌렸을 때 id로 기능 만들어주는거

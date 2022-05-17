@@ -75,6 +75,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
-    private Button btn_scan;
+    private Button btn_scan, btn_toProfile;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -106,11 +107,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar
         initView();
 
+  //      btn_toProfile = findViewById(R.id.btn_toProfile);
         btn_scan = findViewById(R.id.btn_scan);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+
+//        // 옆에 버튼 누르면 계정관리 페이지로 넘어가기
+//        btn_toProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+//                intent.putExtra("name",name);
+//                startActivity(intent);
+//            }
+//        });
+
 
         // 현재 시간 정보 가져오기
         Spinner year_spinner = findViewById(R.id.year_spinner);
@@ -554,6 +567,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //toolbar 보이게 하는거
+    private void initView() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
+    //점점점 눌렀을 때 하위 메뉴 보이게 하는거
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+
+    //하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_profile:
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("name",name);
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                startActivity( new Intent(getApplicationContext(), MainActivity.class));
+                this.finish();
+                return true;
+        }
+        return false;
+    }
+
     // NumberPicker 설정
     public String[] getArrayWithSteps(int minvalue, int maxvalue, int step) {
         int number_of_array = (maxvalue - minvalue) / step + 1;
@@ -564,30 +609,4 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    // toolbar 선언
-    private void initView() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-    }
-
-    // 메뉴 눌렀을 때 하위 메뉴 보이게 하는거
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true;
-    }
-
-    // 하위 메뉴들 눌렸을 때 id로 기능 만들어주는거
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case  R.id.item_account:
-                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("name",name);
-                startActivity(intent);
-                return true;
-        }
-        return false;
-    }
 }
