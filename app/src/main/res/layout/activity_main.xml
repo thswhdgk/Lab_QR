@@ -41,10 +41,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:gravity="center"
-            android:textColor="@color/black"
             android:layout_marginRight="10sp"
-            android:text="전지윤 돼지쉨ㅋ" />
+            android:gravity="center"
+            android:text="현재"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

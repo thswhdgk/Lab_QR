@@ -19,6 +19,8 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,6 +79,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.grpc.Context;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 672;
@@ -109,19 +113,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initView();
-
         btn_scan = findViewById(R.id.btn_scan);
         btn_now = findViewById(R.id.btn_now);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         year_spinner = findViewById(R.id.year_spinner);
         tab = findViewById(R.id.tab);
 
+        initView();
         getCurrentTime();
 
         // 년도 선택 스피너
         yearList = new ArrayList<String>();
-        for(int i=2000; i<=Integer.parseInt(now_year); i++) {
+        for(int i=2021; i<=Integer.parseInt(now_year); i++) {
             yearList.add(Integer.toString(i));
         }
         ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,yearList);
@@ -259,6 +262,11 @@ public class MainActivity extends AppCompatActivity {
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
+                // Progress Dialog 사용
+                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 getList = arrayList.get(position);
                 Log.e("###",getList.getImage_url());
                 if(getList.getImage_url() == "") {
@@ -271,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             CustomDialog.getInstance(MainActivity.this).showDialog(uri);
+                            progressDialog.dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
