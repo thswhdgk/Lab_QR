@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     public FirebaseFirestore db;
     public String year_month, user_name, user_id, document_id, now_year, now_month;
     public List<String> yearList;
-    public boolean now_use;
+    public boolean now_use, click_cancel;
     public TabLayout tab;
     public Spinner year_spinner;
 
@@ -262,22 +263,31 @@ public class MainActivity extends AppCompatActivity {
         listAdapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                // Progress Dialog 사용
-                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                click_cancel = false;
                 getList = arrayList.get(position);
                 Log.e("###",getList.getImage_url());
                 if(getList.getImage_url() == "") {
                     Toast.makeText(getApplication(),"사용 중입니다",Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // Progress Dialog 사용
+                    ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, 1);
+                    progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    progressDialog.setCancelable(true);
+                    progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            click_cancel = true;
+                        }
+                    });
                     if (SystemClock.elapsedRealtime() - recyclerClickTime < 1000) return;
                     recyclerClickTime = SystemClock.elapsedRealtime();
                     storageRef.child(getList.getImage_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
+                            if (click_cancel == true) return;
                             CustomDialog.getInstance(MainActivity.this).showDialog(uri);
                             progressDialog.dismiss();
                         }
@@ -460,7 +470,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // 카메라 촬영 후 확인 버튼 눌렀을 때 데이터베이스 갱신 및 스토리지에 추가
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.e("###","카메라 확인 버튼 눌렀음");
+            // Progress Dialog 사용
+            ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, 2);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             // 스토리지에 추가
             StorageReference riversRef = storageRef.child("lab_image/"+imageFileName);
             UploadTask uploadTask = riversRef.putFile(photoUri);
@@ -473,6 +487,7 @@ public class MainActivity extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
                     Log.e("###","스토리지 업로드 완료");
                 }
             });
