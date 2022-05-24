@@ -20,9 +20,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:textSize="17dp"
+            android:textColor="@color/black"
             android:gravity="center"
             android:minHeight="42dp"
-            android:text="이용할 인원 수를 선택해주세요" />
+            android:text="이용하는 인원 수를 선택해주세요" />
         <NumberPicker
             android:id="@+id/population_picker"
             android:layout_width="match_parent"
@@ -30,10 +32,10 @@
             android:layout_gravity="center_horizontal" />
         <Button
             android:id="@+id/btn_save"
-            android:layout_width="match_parent"
+            android:layout_width="80sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="확인" />
+            android:text="선택" />
 
     </LinearLayout>
 </RelativeLayout>

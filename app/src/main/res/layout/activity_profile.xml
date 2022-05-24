@@ -74,7 +74,7 @@
         />
 
     <TextView
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
         android:paddingLeft="30dp"
         android:id="@+id/tv_modify"
         android:layout_width="wrap_content"

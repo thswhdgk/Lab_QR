@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/gray"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:background="@color/white"
         android:id="@+id/spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,30 +23,20 @@
         app:layout_constraintBottom_toTopOf="@+id/tab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:gravity="center"
+        >
+
 
         <Spinner
             android:id="@+id/year_spinner"
-            android:layout_marginLeft="10sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:spinnerMode="dropdown" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/btn_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10sp"
-            android:gravity="center"
-            android:text="현재"
-            android:textColor="@color/black" />
 
     </LinearLayout>
 
@@ -53,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/spinner_layout"
+        app:layout_constraintBottom_toTopOf="@id/frlayout"
         android:elevation="1dp"
         app:tabMode="scrollable">
 
@@ -130,43 +123,46 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_scan"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab"
-        app:layout_constraintVertical_bias="0.0">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbarFadeDuration="0"
-            android:scrollbarSize="5dp"
-            android:scrollbarThumbVertical="@android:color/darker_gray"
-            android:scrollbars="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_weight="10"
-            tools:ignore="MissingConstraints" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <Button
-        android:id="@+id/btn_scan"
+    <FrameLayout
+        android:id="@+id/frlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="이용시작"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tab">
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="603dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gray"
+                android:scrollbarFadeDuration="0"
+                android:scrollbarSize="5dp"
+                android:scrollbarThumbVertical="@android:color/darker_gray"
+                android:scrollbars="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintVertical_weight="10"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <Button
+            android:id="@+id/btn_scan"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:text="이용시작"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom|center_horizontal"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

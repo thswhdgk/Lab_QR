@@ -49,6 +49,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
-    private Button btn_scan, btn_now;
+    private Button btn_scan;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -115,12 +116,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btn_scan = findViewById(R.id.btn_scan);
-        btn_now = findViewById(R.id.btn_now);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         year_spinner = findViewById(R.id.year_spinner);
         tab = findViewById(R.id.tab);
 
-        initView();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getCurrentTime();
 
         // 년도 선택 스피너
@@ -222,16 +224,6 @@ public class MainActivity extends AppCompatActivity {
         getUser();
         getInfo(now_year+"-"+now_month);
 
-        // 현재 버튼 클릭 시 현재 년도, 월로 돌아가기
-        btn_now.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCurrentTime();
-                tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
-                year_spinner.setSelection(yearList.size()-1);
-                getInfo(now_year+"-"+now_month);
-            }
-        });
 
         // "User"의 "use" 필드가 false일 경우 스캔 기능, true일 경우 카메라 기능
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -590,13 +582,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //toolbar 보이게 하는거
-    private void initView() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    }
     //점점점 눌렀을 때 하위 메뉴 보이게 하는거
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -609,6 +595,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case R.id.item_now:
+                getCurrentTime();
+                tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
+                year_spinner.setSelection(yearList.size()-1);
+                getInfo(now_year+"-"+now_month);;
+                return true;
             case R.id.item_profile:
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 intent.putExtra("name",name);
