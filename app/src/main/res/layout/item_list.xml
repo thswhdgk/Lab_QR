@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:background="@color/white"
-    android:layout_marginBottom="1dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:background="@drawable/item_list_shape"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="66dp">
 
     <LinearLayout
+        android:gravity="center_vertical"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
         android:layout_width="match_parent"
@@ -16,17 +19,19 @@
 
 
         <TextView
+            android:paddingTop="4dp"
+            android:layout_gravity="bottom"
             android:id="@+id/tv_name"
-            android:paddingLeft="10dp"
+            android:paddingLeft="12dp"
             android:paddingRight="10dp"
             android:gravity="center"
             android:text="김모공"
-            android:textSize="20dp"
+            android:textSize="22dp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4" />
+            android:layout_weight="3.5" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,53 +39,86 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:paddingLeft="18dp"
-                    android:text="2020117111"
-                    android:id="@+id/tv_stid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="90dp"
-                    android:text=" 인원수 : "
-                    android:gravity="left"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tv_population"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
 
             <LinearLayout
+                android:paddingTop="4dp"
+                android:layout_marginLeft="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
+                    android:text="날짜 : " />
+
+                <TextView
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
+                    android:id="@+id/tv_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  " />
+
+
+                <TextView
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
                     android:id="@+id/tv_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tv"
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" ~ " />
 
+
                 <TextView
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
                     android:id="@+id/tv_finish_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:gravity="bottom"
+                android:layout_marginLeft="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+
+                <TextView
+                    android:textSize="13.8dp"
+                    android:layout_width="wrap_content"
+                    android:text="이용자 수 : "
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:textSize="13.8dp"
+                    android:textColor="@color/black"
+                    android:id="@+id/tv_population"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
 

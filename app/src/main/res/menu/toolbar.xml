@@ -2,13 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/item_now"
-        android:title="현재"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_cached_24"
-        />
-
-    <item
         android:id="@+id/item_profile"
         android:title="계정 관리"
         app:showAsAction="always"

@@ -6,14 +6,19 @@
     android:background="@color/main"
    >
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/school_mark" />
+
     <TextView
+        android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:text="LAB_QR"
-        android:textSize="20dp"
-        android:textColor="@color/black"
+        android:text="모바일공학과"
+        android:textSize="15dp"
+        android:textColor="@color/white"
         />
 
 

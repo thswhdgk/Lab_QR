@@ -9,7 +9,7 @@ public class ListData {
     private String finish_time;
     private String image_url;
 
-    public ListData(String name, String stid, String population, String start_time, String finish_time, String image_url) {
+    public ListData(String name, String stid, String population, String start_time, String finish_time, String image_url ) {
         this.name = name;
         this.stid = stid;
         this.population = population;

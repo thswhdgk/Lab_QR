@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
-    private Button btn_scan;
+    private Button btn_scan , btn_now;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -117,14 +117,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btn_scan = findViewById(R.id.btn_scan);
+        btn_now = findViewById(R.id.btn_now);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         year_spinner = findViewById(R.id.year_spinner);
         tab = findViewById(R.id.tab);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         getCurrentTime();
+
 
         // 년도 선택 스피너
         yearList = new ArrayList<String>();
@@ -149,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 월 선택 탭아이템
         tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
+      //  tab.setTabTextColors(Color.rgb(0,0,0),Color.rgb(255,0,0));
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -226,6 +230,16 @@ public class MainActivity extends AppCompatActivity {
         getInfo(now_year+"-"+now_month);
 
 
+        btn_now.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentTime();
+                tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
+                year_spinner.setSelection(yearList.size()-1);
+                getInfo(now_year+"-"+now_month);
+            }
+        });
+
         // "User"의 "use" 필드가 false일 경우 스캔 기능, true일 경우 카메라 기능
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     // 현재 시간 정보 가져오기
@@ -596,12 +611,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.item_now:
-                getCurrentTime();
-                tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
-                year_spinner.setSelection(yearList.size()-1);
-                getInfo(now_year+"-"+now_month);;
-                return true;
             case R.id.item_profile:
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 intent.putExtra("name",name);

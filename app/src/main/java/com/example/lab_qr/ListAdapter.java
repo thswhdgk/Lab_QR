@@ -1,5 +1,6 @@
 package com.example.lab_qr;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHolder> {
@@ -30,14 +34,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
         return holder;
     }
 
-    @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.tv_name.setText(arrayList.get(position).getName());
-        holder.tv_stid.setText(arrayList.get(position).getStid());
         holder.tv_population.setText(arrayList.get(position).getPopulation());
         holder.tv_start_time.setText(arrayList.get(position).getStart_time());
         holder.tv_finish_time.setText(arrayList.get(position).getFinish_time());
-
         holder.itemView.getTag(position);
     }
 
@@ -48,7 +49,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView tv_name;
-        protected TextView tv_stid;
         protected TextView tv_population;
         protected TextView tv_start_time;
         protected TextView tv_finish_time;
@@ -56,7 +56,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CustomViewHold
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             this.tv_name = (TextView) itemView.findViewById(R.id.tv_name);
-            this.tv_stid = (TextView) itemView.findViewById(R.id.tv_stid);
             this.tv_population = (TextView) itemView.findViewById(R.id.tv_population);
             this.tv_start_time = (TextView) itemView.findViewById(R.id.tv_start_time);
             this.tv_finish_time = (TextView) itemView.findViewById(R.id.tv_finish_time);

@@ -23,18 +23,31 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_popup.xml" value="0.36354166666666665" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/info_dialog.xml" value="0.22407407407407406" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/item_list.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.252" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/circle_blue.xml" value="0.193" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.193" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_build_24.xml" value="0.193" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_cached_24.xml" value="0.2255" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_drag_handle_24.xml" value="0.252" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.193" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.193" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_profile.xml" value="0.193" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/item_list_shape.xml" value="0.252" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/scan_shape.xml" value="0.252" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_kakao_login.xml" value="0.25" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_population_picker_dialog.xml" value="0.33" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_popup.xml" value="0.3359375" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_profile.xml" value="0.25" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_profile.xml" value="0.5" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/dialog_progress.xml" value="0.3619791666666667" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/info_dialog.xml" value="0.33" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/item_list.xml" value="0.33" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/toolbar.xml" value="0.3359375" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/item_list.xml" value="0.45754245754245754" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/item_spinner.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/sample.xml" value="0.5" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/toolbar.xml" value="0.67" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/menu/toolbar.xml" value="0.3359375" />
+        <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/preference_dialog_edittext_material.xml" value="0.18489583333333334" />
+        <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/resolver_empty_states.xml" value="0.18489583333333334" />
       </map>
     </option>
   </component>
