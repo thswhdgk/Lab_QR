@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/gray"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
     tools:context=".MainActivity">
 
     <include
@@ -15,17 +16,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:background="@color/white"
         android:id="@+id/spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/tab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:gravity="center"
-        >
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
 
         <Spinner
@@ -37,16 +37,15 @@
             android:spinnerMode="dropdown" />
 
 
-
     </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_layout"
-        app:layout_constraintBottom_toTopOf="@id/frlayout"
         android:elevation="1dp"
+        app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_layout"
         app:tabMode="scrollable">
 
         <com.google.android.material.tabs.TabItem
@@ -123,22 +122,32 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+
+
+
     <FrameLayout
         android:id="@+id/frlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="603dp">
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="10dp"
                 android:background="@color/gray"
                 android:scrollbarFadeDuration="0"
                 android:scrollbarSize="5dp"
@@ -148,8 +157,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:layout_constraintVertical_weight="10"
                 tools:ignore="MissingConstraints" />
+
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -157,12 +166,10 @@
             android:id="@+id/btn_scan"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
+            android:layout_gravity="bottom|center_horizontal"
             android:text="이용시작"
             android:textColor="@color/white"
-            android:layout_gravity="bottom|center_horizontal"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
+            app:layout_constraintHorizontal_bias="0.5" />
     </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
