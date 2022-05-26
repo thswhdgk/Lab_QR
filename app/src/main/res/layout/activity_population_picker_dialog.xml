@@ -35,7 +35,9 @@
             android:layout_width="80sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="선택" />
+            android:backgroundTint="@color/main"
+            android:text="선택"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 </RelativeLayout>

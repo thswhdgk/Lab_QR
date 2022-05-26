@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private ListData getList;
     private String imageFilePath, imageFileName;
     private Uri photoUri;
-    private Button btn_scan , btn_now;
+    private Button btn_scan, btn_now;
     private IntentIntegrator qr_scan;
     private AlertDialog dialog;
     private EditText et_stid, et_name;
@@ -131,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
 
         getCurrentTime();
 
+        Intent intent = getIntent();
+        name = intent.getStringExtra("name");
+        if(intent.getExtras() != null && intent.getExtras().getString("state").equals("off")){
+            final Intent new_intent = new Intent(MainActivity.this, KakaoLogin.class);
+            startActivity(new_intent);
+            finish();
+        }
 
         // 년도 선택 스피너
         yearList = new ArrayList<String>();
@@ -155,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 월 선택 탭아이템
         tab.setScrollPosition(Integer.parseInt(now_month)-1,0,true);
-      //  tab.setTabTextColors(Color.rgb(0,0,0),Color.rgb(255,0,0));
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -216,14 +222,6 @@ public class MainActivity extends AppCompatActivity {
 
         qr_scan = new IntentIntegrator(this);
 
-        Intent intent = getIntent();
-        name = intent.getStringExtra("name");
-        if(intent.getExtras() != null && intent.getExtras().getString("state").equals("off")){
-            final Intent new_intent = new Intent(MainActivity.this, KakaoLogin.class);
-            startActivity(new_intent);
-            finish();
-        }
-
         db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -231,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
         // 초기 정보 가져오기
         getUser();
         getInfo(now_year+"-"+now_month);
-
 
         btn_now.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,6 +409,9 @@ public class MainActivity extends AppCompatActivity {
                         document_id = document.getString("documentId");
                         if(!now_use) btn_scan.setText("이용시작");
                         else btn_scan.setText("이용종료");
+
+                        tv_name.setText(user_name);
+                        tv_stid.setText(user_id);
                     } else {
                         // 학번, 이름 정보 생성하기
                         Log.e("###","해당 문서에 데이터가 없음");
@@ -422,10 +422,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e("###","데이터 가져오기 실패");
                 }
-
-                tv_name.setText(user_name);
-                tv_stid.setText(user_id);
-
             }
         });
     }
@@ -493,7 +489,6 @@ public class MainActivity extends AppCompatActivity {
             // 스토리지에 추가
             StorageReference riversRef = storageRef.child("lab_image/"+imageFileName);
             UploadTask uploadTask = riversRef.putFile(photoUri);
-
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
