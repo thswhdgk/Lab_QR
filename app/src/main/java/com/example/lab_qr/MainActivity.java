@@ -306,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     // 현재 시간 정보 가져오기
@@ -617,10 +616,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 intent.putExtra("name",name);
                 startActivity(intent);
-                return true;
-            case android.R.id.home:
-                startActivity( new Intent(getApplicationContext(), MainActivity.class));
-                this.finish();
+                finish();
                 return true;
         }
         return false;

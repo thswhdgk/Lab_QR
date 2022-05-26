@@ -6,11 +6,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -129,15 +133,27 @@ public class ProfileActivity extends AppCompatActivity {
 
     // 학번, 이름 기입 후 데이터베이스에 저장
     public void onStoreButtonClicked(View view) {
-        DocumentReference productRef = db.collection("user").document(name);
-        Map<String, Object> user = new HashMap<>();
-        user.put("id",et_stid.getText().toString());
-        user.put("name",et_name.getText().toString());
-        user.put("use",false);
-        user.put("documentId",null);
-        productRef.set(user);
-        getUser();
-        dialog.dismiss();
+        if(et_name.length() < 2) {
+            Toast toast = Toast.makeText(getApplicationContext(),"이름은 2글자 이상이어야 합니다.",Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.show();
+        }
+        else if(et_stid.length() != 10) {
+            Toast toast = Toast.makeText(getApplicationContext(),"학번은 10글자이어야 합니다.",Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.show();
+        }
+        else {
+            DocumentReference productRef = db.collection("user").document(name);
+            Map<String, Object> user = new HashMap<>();
+            user.put("id",et_stid.getText().toString());
+            user.put("name",et_name.getText().toString());
+            user.put("use",false);
+            user.put("documentId",null);
+            productRef.set(user);
+            getUser();
+            dialog.dismiss();
+        }
     }
 
     //toolbar 보이게 하는거
@@ -154,9 +170,25 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("name",name);
+                intent.putExtra("state","on");
+                startActivity(intent);
                 finish(); //현재 액티비티 없애서 뒤로가기
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("name",name);
+            intent.putExtra("state","on");
+            startActivity(intent);
+            finish();
+        }
+        return true;
     }
 }
