@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean now_use, click_cancel;
     public TabLayout tab;
     public Spinner year_spinner;
+    public TextView tv_name, tv_stid;
 
     // 이용자 목록 리사이클러뷰, 어뎁터, 데이터 불러오기
     private ArrayList<ListData> arrayList;
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         year_spinner = findViewById(R.id.year_spinner);
         tab = findViewById(R.id.tab);
+        tv_name = findViewById(R.id.tv_name);
+        tv_stid = findViewById(R.id.tv_stid);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -399,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if(document.exists()) {
+                    if(document.exists()){
                         Log.e("###","데이터 가져오기 성공");
                         user_name = document.getString("name");
                         user_id = document.getString("id");
@@ -419,6 +422,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e("###","데이터 가져오기 실패");
                 }
+
+                tv_name.setText(user_name);
+                tv_stid.setText(user_id);
+
             }
         });
     }

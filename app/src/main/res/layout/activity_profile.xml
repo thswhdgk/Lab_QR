@@ -42,8 +42,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:textSize="14dp"
-            android:layout_height="wrap_content"
-            android:text="홍길동" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -62,8 +61,7 @@
             android:id="@+id/tv_stid"
             android:textSize="14dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2022111111" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView

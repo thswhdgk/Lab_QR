@@ -48,8 +48,7 @@
                     android:textSize="20dp"
                     android:layout_width="wrap_content"
                     android:textColor="@color/white"
-                    android:layout_height="wrap_content"
-                    android:text="홍길동" />
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout
@@ -70,8 +69,7 @@
                     android:id="@+id/tv_stid"
                     android:layout_width="wrap_content"
                     android:textColor="@color/white"
-                    android:layout_height="wrap_content"
-                    android:text="2022111111" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </LinearLayout>
