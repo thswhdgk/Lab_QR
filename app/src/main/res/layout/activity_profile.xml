@@ -27,7 +27,7 @@
         />
 
     <LinearLayout
-        android:paddingTop="8dp"
+        android:paddingTop="10dp"
         android:paddingLeft="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,13 +35,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
+            android:textSize="15dp"
             android:text="이름 " />
         <TextView
             android:paddingLeft="10dp"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
-            android:textSize="14dp"
+            android:textSize="15dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
@@ -54,18 +54,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
+            android:textSize="15dp"
             android:text="학번 " />
         <TextView
             android:paddingLeft="10dp"
             android:id="@+id/tv_stid"
-            android:textSize="14dp"
+            android:textSize="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
-        android:paddingTop="24dp"
+        android:paddingTop="23dp"
         android:paddingLeft="20dp"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -77,52 +77,50 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingLeft="30dp"
         android:orientation="horizontal">
 
         <ImageView
-            android:paddingLeft="30dp"
-            android:layout_width="50dp"
-            android:layout_height="19dp"
-            android:layout_gravity="bottom"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:src="@drawable/ic_baseline_build_24" />
 
         <TextView
-            android:paddingTop="10dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="10dp"
             android:id="@+id/tv_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
+            android:textSize="15dp"
             android:text="회원정보 수정" />
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:paddingTop="7dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
-            android:paddingLeft="30dp"
-            android:layout_width="50dp"
-            android:layout_height="22dp"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:layout_gravity="bottom"
             android:src="@drawable/ic_baseline_logout_24" />
 
         <TextView
-            android:paddingTop="5dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="10dp"
             android:id="@+id/tv_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="15dp"
             android:text="로그아웃" />
 
     </LinearLayout>
 
     <TextView
-        android:paddingTop="24dp"
+        android:paddingTop="23dp"
         android:paddingLeft="20dp"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -136,6 +134,7 @@
         android:paddingLeft="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="15dp"
         android:text="dvsdl1578@gmail.com" />
 
 </LinearLayout>
