@@ -35,6 +35,7 @@
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.193" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.193" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_profile.xml" value="0.193" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/ic_smebook_background.xml" value="0.2255" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/item_list_shape.xml" value="0.252" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/now_shape.xml" value="0.252" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/scan_shape.xml" value="0.252" />
@@ -54,6 +55,8 @@
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/sample.xml" value="0.5" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/toolbar.xml" value="0.67" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/menu/toolbar.xml" value="0.3359375" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2255" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/mipmap-anydpi-v26/ic_smebook_round.xml" value="0.2255" />
         <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/preference_dialog_edittext_material.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/resolver_empty_states.xml" value="0.18489583333333334" />
       </map>
