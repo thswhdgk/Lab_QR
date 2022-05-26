@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
             });
             // 데이터베이스 갱신
             LocalDateTime dateTime = LocalDateTime.now();
-            String finish_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+            String finish_time = DateTimeFormatter.ofPattern("dd일 HH:mm").format(dateTime);
             DocumentReference DocRef = db.collection(year_month).document(document_id);
             Map<String, Object> info = new HashMap<>();
             info.put("finish_time",finish_time);
@@ -567,7 +567,7 @@ public class MainActivity extends AppCompatActivity {
                             String population = String.valueOf(population_picker.getValue());
                             // 과랩 출입 정보 기록
                             LocalDateTime dateTime = LocalDateTime.now();
-                            String start_time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(dateTime);
+                            String start_time = DateTimeFormatter.ofPattern("dd일 HH:mm").format(dateTime);
                             year_month =  DateTimeFormatter.ofPattern("yyyy-MM").format(dateTime);
                             DocumentReference DocRef = db.collection(year_month).document(start_time+' '+user_name);
                             Map<String, Object> info = new HashMap<>();
