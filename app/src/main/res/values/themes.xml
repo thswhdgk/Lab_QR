@@ -15,4 +15,5 @@
         <item name="android:homeAsUpIndicator">@color/white</item>
 
     </style>
+
 </resources>

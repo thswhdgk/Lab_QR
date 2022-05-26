@@ -5,7 +5,7 @@
       <map>
         <entry key="..\:/Users/82105/AndroidStudioProjects/LAB_QR/app/src/main/res/layout/activity_kakao_login.xml" value="0.2" />
         <entry key="..\:/Users/82105/AndroidStudioProjects/LAB_QR/app/src/main/res/layout/activity_main.xml" value="0.4" />
-        <entry key="..\:/Users/82105/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/82105/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/82105/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_population_picker_dialog.xml" value="0.13072916666666667" />
         <entry key="..\:/Users/82105/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_popup.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82105/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_profile.xml" value="0.25364583333333335" />
@@ -35,6 +35,10 @@
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/item_list_shape.xml" value="0.252" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/now_shape.xml" value="0.252" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/drawable/scan_shape.xml" value="0.252" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/font/font.xml" value="0.3861538461538462" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/font/font_resource.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/font/nanum_bold.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/font/nanum_regular.xml" value="0.21510416666666668" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_kakao_login.xml" value="0.33" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/user/AndroidStudioProjects/Lab_QR/app/src/main/res/layout/activity_population_picker_dialog.xml" value="0.33" />
