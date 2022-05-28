@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main"
-    tools:context=".KakaoLogin">
+    tools:context="com.sme_book.lab_qr.KakaoLogin">
 
     <ImageView
         android:id="@+id/imageView"

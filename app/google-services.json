@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:268737496881:android:186475d83c4fd8da455210",
         "android_client_info": {
-          "package_name": "com.example.lab_qr"
+          "package_name": "com.sme_book.lab_qr"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "268737496881-9hpd6vig8tk19rmd57375oq7q7gq5f0u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.lab_qr",
+            "package_name": "com.sme_book.lab_qr",
             "certificate_hash": "a06ba19a0cf2a0224125b48707f11f391203e16a"
           }
         },
